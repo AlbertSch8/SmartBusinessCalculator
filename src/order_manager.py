@@ -1,6 +1,5 @@
 from typing import List
 import threading
-
 from .models import LineItem
 
 
@@ -19,11 +18,19 @@ class OrderManager:
 
     def snapshot_items(self) -> List[LineItem]:
         """
-        Return a copy of current items.
+        Return a copy of the current items.
         Used by the worker thread to safely iterate over items.
         """
         with self._lock:
             return list(self._items)
+
+    def replace_items(self, items: List[LineItem]) -> None:
+        """
+        Replace current items with a new list.
+        Used when loading data from a JSON file.
+        """
+        with self._lock:
+            self._items = list(items)
 
     def print_items(self) -> None:
         """Print all items in the order."""
