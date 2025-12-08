@@ -26,5 +26,6 @@ Umožňuje vytvořit zakázku, přidávat položky (název, množství, cena, DP
 ## ▶️ Spuštění
 V rootu projektu spusť:
 
-```bash
+git clone https://github.com/TVOJ-USERNAME/TVOJE-REPO.git
+cd TVOJE-REPO
 python main.py
