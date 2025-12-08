@@ -1,63 +1,78 @@
-# Dokumentace – Chytrá kalkulačka pro podnikatele (v1.0)
+# Dokumentace – Chytrá kalkulačka pro podnikatele (v1.0 + JSON)
 
 ## 1. Účel aplikace
-Aplikace slouží jako jednoduchý nástroj pro malé podnikatele nebo živnostníky.  
-Umožňuje vytvořit zakázku, přidat do ní položky a spočítat finální cenu zakázky včetně DPH.  
-Současně ukazuje použití více vláken v Pythonu.
+Aplikace slouží pro malé podnikatele, kteří potřebují snadno počítat cenu zakázky.
+Uživatel může do zakázky přidávat položky a program vypočítá mezisoučet, DPH a cenu s DPH.
+Výpočet probíhá ve worker vlákně (threading).
+
+Verze 2.0 přidává možnost **uložit zakázku do JSON** a **znovu ji načíst**.
 
 ---
 
-## 2. Hlavní části projektu
+## 2. Hlavní části programu
 
-### a) `OrderManager`
-- stará se o jednu zakázku
-- ukládá položky (LineItem)
-- umožňuje bezpečné (thread-safe) přidávání položek
-- poskytuje kopii položek pro výpočet ve vlákně
+### OrderManager
+- spravuje zakázku
+- ukládá a vypisuje položky
+- po načtení JSON dokáže položky kompletně nahradit (`replace_items`)
 
-### b) `LineItem`
-- reprezentuje jednu položku v zakázce
-- obsahuje: název, množství, cenu za jednotku a sazbu DPH
-- umí spočítat mezisoučet a výši DPH
+### LineItem
+- jedna položka v zakázce (název, množství, cena, DPH)
+- umí spočítat mezisoučet a DPH
 
-### c) `CalculationWorker` (worker vlákno)
-- běží na pozadí
-- čeká na úkoly v `queue.Queue`
-- zpracovává úkol `"CALCULATE"`
-- vypočítá:
-  - mezisoučet
-  - DPH
-  - výslednou cenu
-- výsledek uloží do sdíleného slovníku
+### CalculationWorker
+- běží v samostatném vlákně
+- čeká na úkoly („CALCULATE“)
+- provádí výpočet zakázky bez blokování hlavního vlákna
+
+### JSON Storage (json_storage.py)
+- `save_order_to_json(...)` – uloží zakázku do souboru `data/orders.json`
+- `load_order_from_json(...)` – načte zakázku ze stejného souboru
 
 ---
 
-## 3. Vlákna a synchronizace
-- **Hlavní vlákno**: obsluhuje uživatelské menu a zadávání položek.
-- **Worker vlákno**: provádí výpočty zakázky.
-- Komunikace mezi vlákny:
-  - `queue.Queue` (bez potřeby ručního zamykání)
-- Sdílená data (`result_dict`) chráněna:
-  - `threading.Lock`
-- Položky zakázky jsou chráněny:
-  - interním zámkem v `OrderManager`
+## 3. Menu aplikace
+
+1. Přidat položku  
+2. Vypsat položky  
+3. Spustit výpočet (worker thread)  
+4. Zobrazit poslední výsledek  
+5. Uložit zakázku do JSON  
+6. Načíst zakázku z JSON  
+0. Ukončit program  
 
 ---
 
-## 4. Uživatelské ovládání
-Menu umožňuje:
-1. přidat položku  
-2. zobrazit položky  
-3. spustit výpočet  
-4. zobrazit poslední výsledek  
-0. ukončit aplikaci  
+## 4. Formát JSON souboru
 
----
+Soubor `data/orders.json` má tuto strukturu:
 
-## 5. Rozšiřitelnost
-Tento projekt lze dále rozšířit například o:
-- ukládání dat do souborů (JSON, CSV)
-- autosave pomocí dalšího vlákna
-- evidenci více zakázek
-- generování reportů
-- grafické rozhraní (Tkinter)
+```json
+{
+    "order_name": "Název zakázky",
+    "items": [
+        {
+            "name": "Položka",
+            "quantity": 5,
+            "unit_price": 120,
+            "vat_rate": 21
+        }
+    ]
+}
+5. Použité knihovny
+threading – vlákna a synchronizace
+
+queue – komunikace mezi vlákny
+
+json – ukládání a načítání dat
+
+žádné externí knihovny
+
+6. Možné budoucí rozšíření
+automatické ukládání (autosave) ve vlastním vlákně
+
+správa více zakázek
+
+export do CSV/PDF
+
+jednoduché GUI
