@@ -1,1 +1,12 @@
 
+{
+  "order_name": "Moje zakázka",
+  "items": [
+    {
+      "name": "Práce",
+      "quantity": 5,
+      "unit_price": 200,
+      "vat_rate": 21
+    }
+  ]
+}
