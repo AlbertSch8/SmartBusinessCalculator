@@ -17,16 +17,16 @@ def read_float(prompt: str) -> float:
         try:
             return float(input(prompt).replace(",", "."))
         except ValueError:
-            print("Invalid number, please try again.")
+            print("[WARN] Invalid number, please try again.")  # commit 8
 
 
 def print_result(result: Dict[str, float]) -> None:
     """Print the last calculation result."""
     if "subtotal" not in result:
-        print("No calculation result available yet.")
+        print("[WARN] No calculation result available yet.")  # commit 8
         return
 
-    print("\nLast calculation result:")
+    print("\n[INFO] Last calculation result:")  # commit 8
     print(f"Subtotal (without VAT): {result['subtotal']:.2f}")
     print(f"VAT total:              {result['vat']:.2f}")
     print(f"Total (with VAT):       {result['total']:.2f}\n")
@@ -34,15 +34,15 @@ def print_result(result: Dict[str, float]) -> None:
 
 def show_menu() -> None:
     """Display main menu."""
-    print("============== Smart Business Calculator ==============")
+    print("\n============== Smart Business Calculator ==============")
     print("1) Add line item")
     print("2) List items")
     print("3) Run calculation (worker thread)")
-    print("4) Show last result")
+    print("4) Show last calculation result")  # commit 8 – wording
     print("5) Save order to JSON")
     print("6) Load order from JSON")
     print("0) Exit")
-    print("=======================================================")
+    print("=======================================================\n")
 
 
 def main() -> None:
@@ -73,20 +73,15 @@ def main() -> None:
             unit_price = read_float("Unit price: ")
             vat_rate = read_float("VAT rate in %: ")
 
-            item = LineItem(
-                name=name,
-                quantity=quantity,
-                unit_price=unit_price,
-                vat_rate=vat_rate,
-            )
+            item = LineItem(name=name, quantity=quantity, unit_price=unit_price, vat_rate=vat_rate)
             order_manager.add_item(item)
-            print("Item added.\n")
+            print("[INFO] Item added.\n")
 
         elif choice == "2":
             order_manager.print_items()
 
         elif choice == "3":
-            print("Sending calculation request to worker thread...\n")
+            print("[INFO] Sending calculation task to worker thread...\n")
             task_queue.put("CALCULATE")
 
         elif choice == "4":
@@ -94,22 +89,20 @@ def main() -> None:
                 print_result(result_dict)
 
         elif choice == "5":
-            # save current order to JSON
             save_order_to_json(order_manager, JSON_FILEPATH)
 
         elif choice == "6":
-            # load order from JSON
             load_order_from_json(order_manager, JSON_FILEPATH)
 
         elif choice == "0":
-            print("Exiting program...")
+            print("[INFO] Exiting program...")
             stop_event.set()
             task_queue.put("STOP")
             worker.join()
             break
 
         else:
-            print("Invalid choice.\n")
+            print("[WARN] Invalid choice.\n")  # commit 8
 
 
 if __name__ == "__main__":
