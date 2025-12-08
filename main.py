@@ -5,6 +5,10 @@ import queue
 from src.order_manager import OrderManager
 from src.calculation_worker import CalculationWorker
 from src.models import LineItem
+from src.json_storage import save_order_to_json, load_order_from_json
+
+
+JSON_FILEPATH = "data/orders.json"
 
 
 def read_float(prompt: str) -> float:
@@ -35,6 +39,8 @@ def show_menu() -> None:
     print("2) List items")
     print("3) Run calculation (worker thread)")
     print("4) Show last result")
+    print("5) Save order to JSON")
+    print("6) Load order from JSON")
     print("0) Exit")
     print("=======================================================")
 
@@ -86,6 +92,14 @@ def main() -> None:
         elif choice == "4":
             with result_lock:
                 print_result(result_dict)
+
+        elif choice == "5":
+            # save current order to JSON
+            save_order_to_json(order_manager, JSON_FILEPATH)
+
+        elif choice == "6":
+            # load order from JSON
+            load_order_from_json(order_manager, JSON_FILEPATH)
 
         elif choice == "0":
             print("Exiting program...")
