@@ -1,12 +1,11 @@
-
 {
-  "order_name": "Moje zakázka",
-  "items": [
-    {
-      "name": "Práce",
-      "quantity": 5,
-      "unit_price": 200,
-      "vat_rate": 21
-    }
-  ]
+    "order_name": "Alza",
+    "items": [
+        {
+            "name": "2",
+            "quantity": 1.0,
+            "unit_price": 1.0,
+            "vat_rate": 1.0
+        }
+    ]
 }
