@@ -1,22 +1,30 @@
-# Chytrá kalkulačka pro podnikatele (v1.0)
+# Chytrá kalkulačka pro podnikatele (v2.0)
 
 Tento projekt je jednoduchá konzolová aplikace v Pythonu.  
-Umožňuje vytvořit zakázku, přidávat položky (název, množství, cena, DPH) a spočítat celkovou cenu zakázky.  
-Výpočet probíhá v samostatném vlákně pomocí `threading`.
+Umožňuje vytvořit zakázku, přidávat položky (název, množství, cena, DPH), provádět výpočet přes vlákno a nově také **ukládat a načítat zakázku do/z JSON souboru**.
+
+---
 
 ## ✨ Funkce
-- vytvoření zakázky
-- přidávání položek
-- výpis všech položek
-- výpočet přes worker vlákno (oddělení UI a výpočtu)
-- zobrazení posledního výsledku
+- vytvoření zakázky  
+- přidávání položek  
+- výpis položek  
+- výpočet mezisoučtu, DPH a celkové ceny (ve worker vlákně)  
+- **uložení zakázky do `data/orders.json`**  
+- **načtení zakázky ze `data/orders.json`**
+
+---
 
 ## 🧵 Vícevláknová architektura
-- **Hlavní vlákno**: uživatelské menu (UI)
-- **Worker vlákno**: provádí výpočty na pozadí
-- Komunikace mezi vlákny probíhá přes `queue.Queue`
-- Sdílená data jsou chráněna `threading.Lock`
+- hlavní vlákno: obsluhuje menu a vstupy
+- worker vlákno: provádí výpočty (`CalculationWorker`)
+- komunikace přes `queue.Queue`
+- synchronizace sdílených dat pomocí `threading.Lock`
+
+---
 
 ## ▶️ Spuštění
+V rootu projektu spusť:
+
 ```bash
 python main.py
