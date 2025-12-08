@@ -26,6 +26,6 @@ Umožňuje vytvořit zakázku, přidávat položky (název, množství, cena, DP
 ## ▶️ Spuštění
 V rootu projektu spusť:
 
-git clone https://github.com/TVOJ-USERNAME/TVOJE-REPO.git
-cd TVOJE-REPO
-python main.py
+- git clone https://github.com/AlbertSch8/SmartBusinessCalculator.git
+- cd SmartBusinessCalculator
+- python main.py
