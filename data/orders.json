@@ -1,11 +1,4 @@
 {
-    "order_name": "Alza",
-    "items": [
-        {
-            "name": "2",
-            "quantity": 1.0,
-            "unit_price": 1.0,
-            "vat_rate": 1.0
-        }
-    ]
+    "order_name": "albert",
+    "items": []
 }

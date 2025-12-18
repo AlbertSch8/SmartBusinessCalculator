@@ -11,9 +11,9 @@ class CalculationWorker(threading.Thread):
     """
     Background worker that calculates totals for the order.
 
-    Tasks in queue:
-      - "CALCULATE" -> recompute totals
-      - "STOP"      -> exit the thread loop
+    Tasks:
+      - "CALCULATE"
+      - "STOP"
     """
 
     def __init__(
@@ -62,12 +62,6 @@ class CalculationWorker(threading.Thread):
             self.result_dict["subtotal"] = subtotal
             self.result_dict["vat"] = vat_total
             self.result_dict["total"] = total
-
-        # Console info stays (as you had it)
-        print("\n[INFO] Calculation completed in worker thread.")
-        print(f"[INFO] Subtotal (without VAT): {subtotal:.2f}")
-        print(f"[INFO] VAT total:              {vat_total:.2f}")
-        print(f"[INFO] Total (with VAT):       {total:.2f}\n")
 
         if self.logger:
             self.logger.log(
