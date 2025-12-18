@@ -7,6 +7,7 @@ from src.calculation_worker import CalculationWorker
 from src.models import LineItem
 from src.json_storage import save_order_to_json, load_order_from_json
 from src.logger import Logger
+from src.simple_gui import open_simple_gui
 
 
 JSON_FILEPATH = "data/orders.json"
@@ -43,6 +44,7 @@ def show_menu() -> None:
     print("4) Show last calculation result")
     print("5) Save order to JSON")
     print("6) Load order from JSON")
+    print("7) Open simple GUI")
     print("0) Exit")
     print("=======================================================\n")
 
@@ -83,7 +85,9 @@ def main() -> None:
             item = LineItem(name=name, quantity=quantity, unit_price=unit_price, vat_rate=vat_rate)
             order_manager.add_item(item)
             print("[INFO] Item added.\n")
-            logger.log(f"Item added: name='{item.name}', qty={item.quantity}, price={item.unit_price}, vat={item.vat_rate}")
+            logger.log(
+                f"Item added: name='{item.name}', qty={item.quantity}, price={item.unit_price}, vat={item.vat_rate}"
+            )
 
         elif choice == "2":
             order_manager.print_items()
@@ -106,6 +110,16 @@ def main() -> None:
         elif choice == "6":
             load_order_from_json(order_manager, JSON_FILEPATH)
             logger.log(f"Order loaded from JSON: {JSON_FILEPATH}")
+
+        elif choice == "7":
+            open_simple_gui(
+                order_manager=order_manager,
+                task_queue=task_queue,
+                result_dict=result_dict,
+                result_lock=result_lock,
+                json_filepath=JSON_FILEPATH,
+                logger=logger,
+            )
 
         elif choice == "0":
             print("[INFO] Exiting program...")
